@@ -1,0 +1,12 @@
+FROM maven:3.9.9-eclipse-temurin-17
+
+WORKDIR /build
+
+# Copy source
+COPY repo-extension /build
+
+# Build once during image build
+RUN mvn clean package -DskipTests
+
+# Keep container alive for inspection / exec
+CMD ["tail", "-f", "/dev/null"]

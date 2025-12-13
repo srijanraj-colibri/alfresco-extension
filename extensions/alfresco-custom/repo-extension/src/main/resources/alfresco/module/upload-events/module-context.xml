@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="
+         http://www.springframework.org/schema/beans
+         http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+    <bean id="activeMqPublisher"
+          class="com.example.alfresco.events.ActiveMQPublisher">
+          <constructor-arg value="${activemq.broker.url}"/>
+          <constructor-arg value="${upload.events.queue}"/>
+    </bean>
+
+    <bean id="uploadEventBehaviour"
+          class="com.example.alfresco.events.UploadEventBehaviour"
+          init-method="init">
+        <property name="policyComponent" ref="policyComponent"/>
+        <property name="nodeService" ref="nodeService"/>
+        <property name="publisher" ref="activeMqPublisher"/>
+    </bean>
+
+</beans>
