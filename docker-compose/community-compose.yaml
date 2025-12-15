@@ -81,13 +81,20 @@ services:
       activemq:
         condition: service_healthy
   share:
-    image: docker.io/alfresco/alfresco-share:25.3.0
+    build:
+      context: ../../alfresco-share
+      dockerfile: Dockerfile
+    image: alfresco-share-dev:25.3.0
+    container_name: alfresco-share-dev
+    # image: docker.io/alfresco/alfresco-share:25.3.0
     mem_limit: 1g
     environment:
       CSRF_FILTER_ORIGIN: http://localhost:8080
       CSRF_FILTER_REFERER: http://localhost:8080/share/.*
       REPO_HOST: "alfresco"
       REPO_PORT: "8080"
+      SHARE_HOST: localhost
+      SHARE_PORT: 8081
       JAVA_OPTS: >-
         -XX:MinRAMPercentage=50
         -XX:MaxRAMPercentage=80
@@ -101,6 +108,14 @@ services:
       timeout: 2s
       retries: 3
       start_period: 15s
+    ports:
+      - "8081:8080"
+    volumes:
+      # 🔹 Mount full Share SOURCE (editable)
+      - ../../alfresco-share/share-src:/opt/share-src
+
+      # # 🔹 Optional overrides (Surf XML / JS)
+      # - ../../alfresco-share/share-overrides:/usr/local/tomcat/webapps/share
     depends_on:
       alfresco:
         condition: service_healthy
