@@ -7,6 +7,7 @@
 # More details here:
 # https://www.oracle.com/technetwork/java/javase/10-relnote-issues-4108729.html
 #
+name: colibri-ecm
 services:
   alfresco:
     build:
@@ -191,4 +192,4 @@ services:
 
 networks:
   default:
-    name: alfresco-net
+    name: colibri-ecm-net
