@@ -11,7 +11,7 @@ name: colibri-ecm
 services:
   alfresco:
     build:
-      context: ../extensions/alfresco-custom
+      context: ../../alfresco-extensions
       dockerfile: docker/Dockerfile
     image: alfresco-custom:25.3.0
     mem_limit: 1900m
@@ -185,6 +185,91 @@ services:
     extends:
       file: commons/base.yaml
       service: control-center
+      
+  # upload-events-router:
+  #   build:
+  #     context: ../../topic-router
+  #     dockerfile: docker/Dockerfile
+  #   image: upload-events-router
+  #   container_name: upload-events-router
+  #   environment:
+  #     ACTIVEMQ_HOST: activemq
+  #     ACTIVEMQ_PORT: 61613
+  #     ACTIVEMQ_USER: admin
+  #     ACTIVEMQ_PASSWORD: admin
+
+  #     STOMP_HEARTBEAT_OUT: 10000
+  #     STOMP_HEARTBEAT_IN: 0
+  #     ACTIVEMQ_PREFETCH: 1
+
+  #     EVENT_TOPIC: /topic/alfresco.upload.events
+  #     ROUTER_CLIENT_ID: ecm-fileupload-ai-router
+  #     ROUTER_SUBSCRIPTION_NAME: ecm-fileupload-ai-router-subscriber
+
+  #     AUTOTAG_QUEUE: /queue/alfresco.autotag
+
+  #     LOG_LEVEL: INFO
+
+  # redis:
+  #   image: redis:7
+  #   container_name: redis
+  #   ports:
+  #     - "6379:6379"
+
+  # auto-tag-consumer:
+  #   build:
+  #     context: ../../auto-tag-consumer
+  #     dockerfile: docker/consumer.Dockerfile
+  #   environment:
+  #     ACTIVEMQ_HOST: activemq
+  #     ACTIVEMQ_PORT: 61613
+  #     ACTIVEMQ_USER: admin
+  #     ACTIVEMQ_PASSWORD: admin
+  #     ACTIVEMQ_QUEUE: /queue/alfresco.autotag
+  #     ACTIVEMQ_PREFETCH: 1
+  #     ACTIVEMQ_HEARTBEAT_OUT: 10000
+  #     ACTIVEMQ_HEARTBEAT_IN: 0
+
+  #     REDIS_HOST: redis
+  #     REDIS_PORT: 6379
+
+  #     CELERY_BROKER_URL: redis://redis:6379/0
+  #     CELERY_RESULT_BACKEND: redis://redis:6379/1
+
+      
+  #     ALFRESCO_BASE_URL: http://alfresco:8080/alfresco
+  #     ALFRESCO_USERNAME: admin
+  #     ALFRESCO_PASSWORD: admin
+
+  #     WORKER_TIMEOUT: 600
+  #     LOG_LEVEL: INFO
+  #   depends_on:
+  #     - activemq
+  #     - redis
+  #   restart: unless-stopped
+
+  # auto-tag-worker:
+  #   build:
+  #     context: ../../auto-tag-consumer
+  #     dockerfile: docker/worker.Dockerfile
+  #   environment:
+  #     REDIS_HOST: redis
+  #     REDIS_PORT: 6379
+
+  #     CELERY_BROKER_URL: redis://redis:6379/0
+  #     CELERY_RESULT_BACKEND: redis://redis:6379/1
+
+  #     ALFRESCO_BASE_URL: http://alfresco:8080/alfresco
+  #     ALFRESCO_USERNAME: admin
+  #     ALFRESCO_PASSWORD: admin
+
+  #     LOG_LEVEL: INFO
+  #   depends_on:
+  #     - redis
+  #   restart: unless-stopped
+  #   deploy:
+  #     replicas: 1    
+
   proxy:
     extends:
       file: commons/base.yaml
